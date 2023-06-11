@@ -34,10 +34,24 @@ function getRecentArticles() {
   });
 }
 
+function getById(id: number) {
+  return prisma.article.findUnique({
+    where: { id },
+    include: {
+      User: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
+}
+
 const articleRepository = {
   create,
   findByTitle,
   getRecentArticles,
+  getById,
 };
 
 export default articleRepository;
