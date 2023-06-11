@@ -29,3 +29,15 @@ export async function getRecentArticles(_req: Request, res: Response, next: Next
     next(error);
   }
 }
+
+export async function getArticleById(req: Request, res: Response, next: NextFunction) {
+  const { articleId } = req.params;
+
+  try {
+    const article = await articleService.getArticleById(Number(articleId));
+
+    return res.status(httpStatus.OK).send(article);
+  } catch (error) {
+    next(error);
+  }
+}
