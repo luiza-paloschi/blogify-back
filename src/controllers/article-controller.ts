@@ -20,6 +20,17 @@ export async function createArticle(req: AuthenticatedRequest, res: Response, ne
   }
 }
 
+export async function getUserArticles(req: Request, res: Response, next: NextFunction) {
+  const { userId } = req.params;
+
+  try {
+    const articles = await articleService.getUserArticles(Number(userId));
+    return res.status(httpStatus.OK).send(articles);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getRecentArticles(_req: Request, res: Response, next: NextFunction) {
   try {
     const articles = await articleService.getRecentArticles();

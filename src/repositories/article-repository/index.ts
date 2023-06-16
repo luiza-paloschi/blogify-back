@@ -13,6 +13,19 @@ async function findByTitle(title: string) {
   });
 }
 
+function getUserArticles(userId: number) {
+  return prisma.article.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: { updatedAt: 'desc' },
+  });
+}
+
 function getRecentArticles() {
   return prisma.article.findMany({
     take: 10,
@@ -52,6 +65,7 @@ const articleRepository = {
   findByTitle,
   getRecentArticles,
   getById,
+  getUserArticles,
 };
 
 export default articleRepository;
