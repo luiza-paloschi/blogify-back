@@ -20,6 +20,19 @@ export async function createArticle(req: AuthenticatedRequest, res: Response, ne
   }
 }
 
+export async function deleteArticle(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { articleId } = req.params;
+  const userId = req.userId;
+
+  try {
+    await articleService.deleteArticle(userId, Number(articleId));
+
+    return res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getUserArticles(req: Request, res: Response, next: NextFunction) {
   const { userId } = req.params;
 

@@ -5,6 +5,10 @@ import { badRequestError } from '@/errors/bad-request-error';
 import userRepository from '@/repositories/user-repository';
 import { forbiddenError } from '@/errors/forbidden-error';
 
+function checkValue(value: number) {
+  if (!value || isNaN(value)) throw badRequestError();
+}
+
 export async function createArticle(params: CreateArticleParams): Promise<Article> {
   return await articleRepository.create(params);
 }
@@ -14,7 +18,7 @@ export async function getRecentArticles() {
 }
 
 export async function getArticleById(articleId: number) {
-  if (!articleId || isNaN(articleId)) throw badRequestError();
+  checkValue(articleId);
 
   const article = await articleRepository.getById(articleId);
   if (!article) throw notFoundError();
@@ -23,13 +27,24 @@ export async function getArticleById(articleId: number) {
 }
 
 export async function getUserArticles(userId: number) {
-  if (!userId || isNaN(userId)) throw badRequestError();
+  checkValue(userId);
 
   const user = await userRepository.findById(userId);
   if (!user) throw forbiddenError();
 
   const articles = await articleRepository.getUserArticles(userId);
   return articles;
+}
+
+export async function deleteArticle(userId: number, articleId: number) {
+  checkValue(articleId);
+
+  const article = await articleRepository.getById(articleId);
+  if (!article) throw notFoundError();
+
+  if (article.userId !== userId) throw forbiddenError();
+
+  await articleRepository.deleteArticle(articleId);
 }
 
 export type CreateArticleParams = Pick<Article, 'userId' | 'title' | 'content'>;
@@ -40,6 +55,7 @@ const articleService = {
   getRecentArticles,
   getArticleById,
   getUserArticles,
+  deleteArticle,
 };
 
 export * from './errors';

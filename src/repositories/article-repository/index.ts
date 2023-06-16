@@ -60,12 +60,19 @@ function getById(id: number) {
   });
 }
 
+function deleteArticle(id: number) {
+  return prisma.article.delete({
+    where: { id },
+  });
+}
+
 const articleRepository = {
   create,
   findByTitle,
   getRecentArticles,
   getById,
   getUserArticles,
+  deleteArticle,
 };
 
 export default articleRepository;
