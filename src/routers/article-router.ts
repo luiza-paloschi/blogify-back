@@ -3,6 +3,7 @@ import { authenticateToken } from '@/middlewares';
 import {
   createArticle,
   deleteArticle,
+  getAllArticles,
   getArticleById,
   getRecentArticles,
   getUserArticles,
@@ -12,6 +13,7 @@ const articleRouter = Router();
 
 articleRouter
   .get('/recent', getRecentArticles)
+  .get('/all', getAllArticles)
   .get('/:articleId', getArticleById)
   .get('/user/:userId', getUserArticles)
   .post('/', authenticateToken, createArticle)

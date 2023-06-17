@@ -47,8 +47,23 @@ export async function deleteArticle(userId: number, articleId: number) {
   await articleRepository.deleteArticle(articleId);
 }
 
+export async function getAll({ page, limit }: GetArticlesQuery) {
+  checkValue(page);
+  checkValue(limit);
+
+  const offset = (page - 1) * limit;
+  const { articles, totalArticles } = await articleRepository.getAll(limit, offset);
+
+  return {
+    articles,
+    currentPage: Number(page),
+    totalPages: Math.ceil(totalArticles / limit),
+  };
+}
+
 export type CreateArticleParams = Pick<Article, 'userId' | 'title' | 'content'>;
 export type CreateArticleBody = Omit<CreateArticleParams, 'userId'>;
+export type GetArticlesQuery = { page: number; limit: number };
 
 const articleService = {
   createArticle,
@@ -56,6 +71,7 @@ const articleService = {
   getArticleById,
   getUserArticles,
   deleteArticle,
+  getAll,
 };
 
 export * from './errors';

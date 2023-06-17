@@ -65,3 +65,18 @@ export async function getArticleById(req: Request, res: Response, next: NextFunc
     next(error);
   }
 }
+
+export async function getAllArticles(req: Request, res: Response, next: NextFunction) {
+  const { page = 1, limit = 10 } = req.query as Record<string, string>;
+
+  const numberPage = Number(page);
+  const numberLimit = Number(limit);
+
+  try {
+    const article = await articleService.getAll({ page: numberPage, limit: numberLimit });
+
+    return res.status(httpStatus.OK).send(article);
+  } catch (error) {
+    next(error);
+  }
+}

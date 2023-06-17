@@ -66,6 +66,30 @@ function deleteArticle(id: number) {
   });
 }
 
+async function getAll(limit: number, offset: number) {
+  const articles = await prisma.article.findMany({
+    take: limit,
+    skip: offset,
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      User: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  const totalArticles = await prisma.article.count();
+
+  return { articles, totalArticles };
+}
+
 const articleRepository = {
   create,
   findByTitle,
@@ -73,6 +97,7 @@ const articleRepository = {
   getById,
   getUserArticles,
   deleteArticle,
+  getAll,
 };
 
 export default articleRepository;
