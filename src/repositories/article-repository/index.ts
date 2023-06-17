@@ -13,6 +13,19 @@ async function findByTitle(title: string) {
   });
 }
 
+function getUserArticles(userId: number) {
+  return prisma.article.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: { updatedAt: 'desc' },
+  });
+}
+
 function getRecentArticles() {
   return prisma.article.findMany({
     take: 10,
@@ -47,11 +60,44 @@ function getById(id: number) {
   });
 }
 
+function deleteArticle(id: number) {
+  return prisma.article.delete({
+    where: { id },
+  });
+}
+
+async function getAll(limit: number, offset: number) {
+  const articles = await prisma.article.findMany({
+    take: limit,
+    skip: offset,
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      User: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  const totalArticles = await prisma.article.count();
+
+  return { articles, totalArticles };
+}
+
 const articleRepository = {
   create,
   findByTitle,
   getRecentArticles,
   getById,
+  getUserArticles,
+  deleteArticle,
+  getAll,
 };
 
 export default articleRepository;
