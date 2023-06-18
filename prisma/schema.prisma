@@ -37,6 +37,14 @@ model Article {
   content   String   
   userId    Int
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId  Int
+  Category  Category   @relation(fields: [categoryId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  Articles  Article[]
 }

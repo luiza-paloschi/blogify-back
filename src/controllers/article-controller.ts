@@ -9,7 +9,7 @@ export async function createArticle(req: AuthenticatedRequest, res: Response, ne
   const userId = req.userId;
 
   try {
-    if (!body.title || !body.content) throw badRequestError();
+    if (!body.title || !body.content || !body.categoryId) throw badRequestError();
     const params = { ...body, userId };
 
     const article = await articleService.createArticle(params);

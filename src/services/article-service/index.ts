@@ -61,7 +61,7 @@ export async function getAll({ page, limit }: GetArticlesQuery) {
   };
 }
 
-export type CreateArticleParams = Pick<Article, 'userId' | 'title' | 'content'>;
+export type CreateArticleParams = Pick<Article, 'userId' | 'title' | 'content' | 'categoryId'>;
 export type CreateArticleBody = Omit<CreateArticleParams, 'userId'>;
 export type GetArticlesQuery = { page: number; limit: number };
 
