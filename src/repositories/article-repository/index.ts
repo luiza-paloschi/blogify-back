@@ -43,6 +43,7 @@ function getRecentArticles() {
           username: true,
         },
       },
+      Category: true,
     },
   });
 }
@@ -56,6 +57,7 @@ function getById(id: number) {
           username: true,
         },
       },
+      Category: true,
     },
   });
 }
@@ -76,6 +78,7 @@ async function getAll(limit: number, offset: number) {
       title: true,
       createdAt: true,
       updatedAt: true,
+      Category: true,
       User: {
         select: {
           id: true,
