@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function create(data: Prisma.ArticleUncheckedCreateInput) {
-  return prisma.article.create({
+  return await prisma.article.create({
     data,
   });
 }
@@ -93,6 +93,30 @@ async function getAll(limit: number, offset: number) {
   return { articles, totalArticles };
 }
 
+async function getByCategory(categoryId: number, limit: number, offset: number) {
+  const articles = await prisma.article.findMany({
+    take: limit,
+    skip: offset,
+    where: { categoryId },
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      User: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
+  });
+  const totalArticles = await prisma.article.count({ where: { categoryId } });
+
+  return { articles, totalArticles };
+}
+
 const articleRepository = {
   create,
   findByTitle,
@@ -101,6 +125,7 @@ const articleRepository = {
   getUserArticles,
   deleteArticle,
   getAll,
+  getByCategory,
 };
 
 export default articleRepository;

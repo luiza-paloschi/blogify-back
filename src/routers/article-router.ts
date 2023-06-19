@@ -5,6 +5,7 @@ import {
   deleteArticle,
   getAllArticles,
   getArticleById,
+  getByCategory,
   getRecentArticles,
   getUserArticles,
 } from '@/controllers/article-controller';
@@ -16,6 +17,7 @@ articleRouter
   .get('/all', getAllArticles)
   .get('/:articleId', getArticleById)
   .get('/user/:userId', getUserArticles)
+  .get('/category/:categoryId', getByCategory)
   .post('/', authenticateToken, createArticle)
   .delete('/delete/:articleId', authenticateToken, deleteArticle);
 

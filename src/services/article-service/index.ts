@@ -61,9 +61,25 @@ export async function getAll({ page, limit }: GetArticlesQuery) {
   };
 }
 
+export async function getByCategory({ page, limit, categoryId }: GetByCategoryParams) {
+  checkValue(page);
+  checkValue(limit);
+  checkValue(categoryId);
+
+  const offset = (page - 1) * limit;
+  const { articles, totalArticles } = await articleRepository.getByCategory(categoryId, limit, offset);
+
+  return {
+    articles,
+    currentPage: Number(page),
+    totalPages: Math.ceil(totalArticles / limit),
+  };
+}
+
 export type CreateArticleParams = Pick<Article, 'userId' | 'title' | 'content' | 'categoryId'>;
 export type CreateArticleBody = Omit<CreateArticleParams, 'userId'>;
 export type GetArticlesQuery = { page: number; limit: number };
+export type GetByCategoryParams = { page: number; limit: number; categoryId: number };
 
 const articleService = {
   createArticle,
@@ -72,6 +88,7 @@ const articleService = {
   getUserArticles,
   deleteArticle,
   getAll,
+  getByCategory,
 };
 
 export * from './errors';

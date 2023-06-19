@@ -80,3 +80,24 @@ export async function getAllArticles(req: Request, res: Response, next: NextFunc
     next(error);
   }
 }
+
+export async function getByCategory(req: Request, res: Response, next: NextFunction) {
+  const { page = 1, limit = 10 } = req.query as Record<string, string>;
+  const { categoryId } = req.params;
+
+  const numberPage = Number(page);
+  const numberLimit = Number(limit);
+  const numberCategoryId = Number(categoryId);
+
+  try {
+    const article = await articleService.getByCategory({
+      page: numberPage,
+      limit: numberLimit,
+      categoryId: numberCategoryId,
+    });
+
+    return res.status(httpStatus.OK).send(article);
+  } catch (error) {
+    next(error);
+  }
+}
