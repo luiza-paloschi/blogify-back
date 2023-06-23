@@ -1,15 +1,19 @@
 import { Article } from '@prisma/client';
+import { duplicatedTitleError } from './errors';
 import articleRepository from '@/repositories/article-repository';
 import { notFoundError } from '@/errors';
 import { badRequestError } from '@/errors/bad-request-error';
 import userRepository from '@/repositories/user-repository';
 import { forbiddenError } from '@/errors/forbidden-error';
 
-function checkValue(value: number) {
+export function checkValue(value: number) {
   if (!value || isNaN(value)) throw badRequestError();
 }
 
 export async function createArticle(params: CreateArticleParams): Promise<Article> {
+  const articleTitle = await articleRepository.findByTitle(params.title);
+  if (articleTitle) throw duplicatedTitleError();
+
   return await articleRepository.create(params);
 }
 
